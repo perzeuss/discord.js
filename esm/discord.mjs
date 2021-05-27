@@ -66,6 +66,8 @@ export const {
   ClientUser,
   Collector,
   CommandInteraction,
+  ComponentInteraction,
+  ComponentInteractionCollector,
   DMChannel,
   Emoji,
   Guild,
