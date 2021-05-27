@@ -3276,7 +3276,7 @@ declare module 'discord.js' {
 
   type MessageButtonStyle = keyof typeof MessageButtonStyles;
 
-  type MessageButtonStyleResolvable = MessageButtonStyle | MessageButtonStyles | string | number;
+  type MessageButtonStyleResolvable = MessageButtonStyle | MessageButtonStyles;
 
   interface MessageCollectorOptions extends CollectorOptions {
     max?: number;
@@ -3291,7 +3291,7 @@ declare module 'discord.js' {
 
   type MessageComponentType = keyof typeof MessageComponentTypes;
 
-  type MessageComponentTypeResolvable = MessageComponentType | MessageComponentTypes | string | number;
+  type MessageComponentTypeResolvable = MessageComponentType | MessageComponentTypes;
 
   interface MessageEditOptions {
     content?: StringResolvable;
