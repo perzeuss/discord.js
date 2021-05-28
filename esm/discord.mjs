@@ -92,6 +92,7 @@ export const {
   MessageEmbed,
   MessageMentions,
   MessageReaction,
+  MessageSelectMenu,
   NewsChannel,
   OAuth2Guild,
   PermissionOverwrites,
