@@ -1300,10 +1300,12 @@ declare module 'discord.js' {
   }
 
   export class MessageComponentInteraction extends Interaction {
+    public componentType: MessageComponentType;
     public customID: string;
     public deferred: boolean;
     public message: Message | RawMessage;
     public replied: boolean;
+    public values: string[] | null;
     public webhook: WebhookClient;
     public defer(ephemeral?: boolean): Promise<void>;
     public deferUpdate(): Promise<void>;
@@ -1452,6 +1454,13 @@ declare module 'discord.js' {
     public options: MessageSelectOption[];
     public placeholder: string | null;
     public type: 'SELECT_MENU';
+    public addOption(option: MessageSelectOption): this;
+    public addOptions(options: MessageSelectOption[] | MessageSelectOption[][]): this;
+    public setCustomID(customID: string): this;
+    public setMaxValues(maxValues: number): this;
+    public setMinValues(minValues: number): this;
+    public setPlaceholder(placeholder: string): this;
+    public toJSON(): object;
   }
 
   export class NewsChannel extends TextBasedChannel(GuildChannel) {
