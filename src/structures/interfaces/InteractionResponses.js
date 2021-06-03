@@ -1,6 +1,5 @@
 'use strict';
 
-const WebhookClient = require('../../client/WebhookClient');
 const { InteractionResponseTypes } = require('../../util/Constants');
 const MessageFlags = require('../../util/MessageFlags');
 const APIMessage = require('../APIMessage');
@@ -10,26 +9,6 @@ const APIMessage = require('../APIMessage');
  * @interface
  */
 class InteractionResponses {
-  constructor() {
-    /**
-     * Whether the reply to this interaction has been deferred
-     * @type {boolean}
-     */
-    this.deferred = false;
-
-    /**
-     * Whether this interaction has already been replied to
-     * @type {boolean}
-     */
-    this.replied = false;
-
-    /**
-     * An associated webhook client, can be used to create deferred replies
-     * @type {WebhookClient}
-     */
-    this.webhook = new WebhookClient(this.applicationID, this.token, this.client.options);
-  }
-
   /**
    * Options for deferring the reply to a {@link CommandInteraction}.
    * @typedef {InteractionDeferOptions}
@@ -157,7 +136,15 @@ class InteractionResponses {
    * @returns {Promise<Message|Object>}
    */
   async followUp(content, options) {
-    await this.webhook.send(content, options);
+    const apiMessage = content instanceof APIMessage ? content : APIMessage.create(this, content, options);
+    const { data, files } = await apiMessage.resolveData().resolveFiles();
+
+    const raw = await this.client.api.webhooks(this.applicationID, this.token).post({
+      data,
+      files,
+    });
+
+    return this.channel?.messages.add(raw) ?? raw;
   }
 
   /**
@@ -183,7 +170,7 @@ class InteractionResponses {
    * Updates the original message whose button was pressed
    * @param {string|APIMessage|MessageAdditions} content The content for the reply
    * @param {WebhookEditMessageOptions} [options] Additional options for the reply
-   * @returns {Promise<Message|Object>}
+   * @returns {Promise<void>}
    * @example
    * // Remove the buttons from the message
    * interaction.update("A button was clicked", { components: [] })

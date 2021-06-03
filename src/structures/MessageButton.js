@@ -1,7 +1,8 @@
 'use strict';
 
 const BaseMessageComponent = require('./BaseMessageComponent');
-const { MessageButtonStyles, MessageComponentTypes } = require('../util/Constants.js');
+const { RangeError } = require('../errors');
+const { MessageButtonStyles, MessageComponentTypes } = require('../util/Constants');
 const Util = require('../util/Util');
 
 /**
@@ -43,7 +44,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * The style of this button
-     * @type {MessageButtonStyle}
+     * @type {?MessageButtonStyle}
      */
     this.style = data.style ? MessageButton.resolveStyle(data.style) : null;
 
@@ -72,7 +73,7 @@ class MessageButton extends BaseMessageComponent {
    * @returns {MessageButton}
    */
   setCustomID(customID) {
-    this.customID = Util.resolveString(customID);
+    this.customID = Util.verifyString(customID, RangeError, 'BUTTON_CUSTOM_ID');
     return this;
   }
 
@@ -92,7 +93,8 @@ class MessageButton extends BaseMessageComponent {
    * @returns {MessageButton}
    */
   setEmoji(emoji) {
-    this.emoji = Util.parseEmoji(`${emoji}`);
+    if (/^\d{17,19}$/.test(emoji)) this.emoji = { id: emoji };
+    else this.emoji = Util.parseEmoji(`${emoji}`);
     return this;
   }
 
@@ -102,7 +104,7 @@ class MessageButton extends BaseMessageComponent {
    * @returns {MessageButton}
    */
   setLabel(label) {
-    this.label = Util.resolveString(label);
+    this.label = Util.verifyString(label, RangeError, 'BUTTON_LABEL');
     return this;
   }
 
@@ -122,7 +124,7 @@ class MessageButton extends BaseMessageComponent {
    * @returns {MessageButton}
    */
   setURL(url) {
-    this.url = Util.resolveString(url);
+    this.url = Util.verifyString(url, RangeError, 'BUTTON_URL');
     return this;
   }
 
